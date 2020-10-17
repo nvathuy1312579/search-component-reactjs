@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/styles';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   wrapperSearch: {
@@ -28,31 +30,49 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
     height: 40,
   },
+  loadingBtn: {
+    padding: theme.spacing(1),
+  }
 }));
 
-export default function SearchBox({ value, placeholder, onChange }) {
+export default function SearchBox({ loading, value, onChange, variant, onSubmit, classNameSearch }) {
   const classes = useStyles();
-  const [searchKey, setSearchKey] = useState('');
+  
+  const handleChange = (e) => {
+    onChange(e.target.value);
+  };
 
   return (
     <div className={classes.wrapperSearch}>
-      <form className={classes.search}>
+      <form className={clsx(classes.search, classNameSearch)} onSubmit={onSubmit}>
         <Input
           disableUnderline
-          value={searchKey}
+          value={value}
           name="searchKey"
           placeholder="Search..."
           className={classes.searchInput}
-          onChange={(e) => setSearchKey(e.target.value)}
+          onChange={handleChange}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.searchButton}
-          onClick={() => {}}
-        >
-          <SearchIcon fontSize="small" />
-        </Button>
+        {variant === 'debounce' ? (
+          loading ? (
+            <CircularProgress className={classes.loadingBtn} size={18} fontSize="small" />
+          ) : (
+            <SearchIcon fontSize="small" style={{ fill: '#ff5722' }} />
+          )
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.searchButton}
+            onClick={onSubmit}
+          >
+            {loading ? (
+              <CircularProgress size={18} color="#fff" fontSize="small" />
+            ) : (
+              <SearchIcon fontSize="small" />
+            )}
+          </Button>
+        )}
       </form>
     </div>
   );
