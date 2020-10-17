@@ -15,6 +15,5 @@ export function mappingData(data) {
       author: addStyleForString(_highlightResult.author) || author,
     };
   });
-  console.log(newData);
   return newData;
 }
