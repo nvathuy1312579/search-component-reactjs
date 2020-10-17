@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   wrapperResult: {
-      maxHeight: 200,
-  }
+    maxHeight: 200,
+  },
 }));
 export default function SearchDefault() {
   const classes = useStyles();
@@ -24,28 +24,32 @@ export default function SearchDefault() {
   const [searchKey, setSearchKey] = useState('');
 
   const fetchData = async (searchValue = '') => {
+    setLoading(true);
     const res = await searchApi(searchValue);
     if (res.status === 200) {
       const newDataFetched = res.data.hits.length > 0 ? mappingData(res.data.hits) : [];
       setDatas(newDataFetched);
     }
+    setLoading(false);
   };
 
   const handleSearch = async (e) => {
-    e.preventDefault();
-    setLoading(true);
     fetchData(searchKey);
-    setLoading(false);
-  }
+  };
 
   useEffect(() => {
     fetchData();
-  }, [])
+  }, []);
 
   return (
     <div className={classes.container}>
-      <SearchBox loading={loading} value={searchKey} onChange={setSearchKey} onSubmit={handleSearch}/>
-      <ListItemResult loading={loading} data={datas}/>
+      <SearchBox
+        loading={loading}
+        value={searchKey}
+        onChange={setSearchKey}
+        onSubmit={handleSearch}
+      />
+      <ListItemResult loading={loading} data={datas} />
     </div>
   );
 }

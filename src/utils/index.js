@@ -1,8 +1,8 @@
 function addStyleForString(objectValue = { value: null, matchedWords: [] }) {
   const { value, matchedWords } = objectValue;
-  const strStyled = `<em style="background: yellow; font-weight: 600;">${matchedWords[0]}</em>`;
+  const strStyled = `<span style="background: yellow; font-weight: 600;">${matchedWords[0]}</span>`;
 
-  return value ? value.replace(/<em>(.|\n)*?<\/em>/g, strStyled) : '';
+  return value ? value.replace(/<em>(.|\n)*?<\/em>/g, strStyled) : '<span style="color: gray;">(empty)</span>';
 }
 
 export function mappingData(data) {

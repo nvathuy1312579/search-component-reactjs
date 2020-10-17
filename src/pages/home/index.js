@@ -12,14 +12,14 @@ export default function HomePage() {
     <Container maxWidth="sm">
       <Box my={4}>
         <Typography variant="h4" component="h1" align="center" gutterBottom>
-          Frontend Skill Test
+          Frontend Skill Test - Thuy Nguyen
         </Typography>
         <Typography variant="h5" gutterBottom>
-          Search default:
+         Default
         </Typography>
         <SearchDefault />
         <Typography variant="h5" gutterBottom>
-          Search debounce:
+         Debounce Search Input
         </Typography>
         <SearchDebounce />
       </Box>

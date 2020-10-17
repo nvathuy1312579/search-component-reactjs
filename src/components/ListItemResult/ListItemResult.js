@@ -6,21 +6,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    padding: theme.spacing(2, 0),
     maxHeight: 200,
     overflow: 'auto',
   },
-  listItemContainer: {
-    '&:hover $moreIcon': {
-      visibility: 'visible',
-    },
-  },
   listItem: {
     padding: theme.spacing(0, 2),
+    borderBottom: '1px solid #eee',
   },
   author: {
     fontWeight: 600,
@@ -29,13 +25,24 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     alignItems: 'center',
   },
-  itemName: {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    paddingRight: 4,
-  },
 }));
+
+function EmptyItem() {
+  const classes = useStyles();
+
+  return (
+    <ListItem>
+      <ListItemText>
+        <div className={classes.itemContent}>
+          <Typography noWrap className={classes.author}>
+            No results
+          </Typography>
+          <Typography>Your search returned no results</Typography>
+        </div>
+      </ListItemText>
+    </ListItem>
+  );
+}
 
 export default function ListItemResult({ loading, data }) {
   const classes = useStyles();
@@ -43,43 +50,31 @@ export default function ListItemResult({ loading, data }) {
   return (
     <Paper>
       {loading ? (
-        <CircularProgress size={18} color="primary" />
+        <Box height={40} display="flex" justifyContent="center" alignItems="center">
+          <CircularProgress size={18} color="primary" />
+        </Box>
       ) : (
         <List disablePadding className={classes.wrapper}>
           {data.length > 0 ? (
             data.map((item) => (
-              <ListItem
-                key={item.id}
-                className={classes.listItem}
-                classes={{ container: classes.listItemContainer }}
-              >
+              <ListItem button key={item.id} className={classes.listItem}>
                 <ListItemText>
                   <div className={classes.itemContent}>
-                    <Typography noWrap weight="bold" className={classes.author}>
-                      {item.author}
-                    </Typography>
+                    <Typography
+                      dangerouslySetInnerHTML={{ __html: `${item.author}` }}
+                      noWrap
+                      weight="bold"
+                      className={classes.author}
+                    />
                     {item.title && (
-                      <Typography
-                        dangerouslySetInnerHTML={{ __html: `${item.title}` }}
-                        title={item.title}
-                        noWrap
-                      />
+                      <Typography dangerouslySetInnerHTML={{ __html: `${item.title}` }} />
                     )}
                   </div>
                 </ListItemText>
               </ListItem>
             ))
           ) : (
-            <ListItem>
-              <ListItemText>
-                <div className={classes.itemContent}>
-                  <Typography noWrap className={classes.author}>
-                    No results
-                  </Typography>
-                  <Typography>Your search returned no results</Typography>
-                </div>
-              </ListItemText>
-            </ListItem>
+            <EmptyItem />
           )}
         </List>
       )}

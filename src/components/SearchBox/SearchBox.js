@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/styles';
@@ -32,19 +32,24 @@ const useStyles = makeStyles((theme) => ({
   },
   loadingBtn: {
     padding: theme.spacing(1),
-  }
+  },
 }));
 
-export default function SearchBox({ loading, value, onChange, variant, onSubmit, classNameSearch }) {
+function SearchBox({ loading, value, onChange, variant, onSubmit, classNameSearch }, ref) {
   const classes = useStyles();
-  
+
   const handleChange = (e) => {
     onChange(e.target.value);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit && onSubmit();
+  };
+
   return (
-    <div className={classes.wrapperSearch}>
-      <form className={clsx(classes.search, classNameSearch)} onSubmit={onSubmit}>
+    <div className={classes.wrapperSearch} ref={ref}>
+      <form className={clsx(classes.search, classNameSearch)} onSubmit={handleSubmit}>
         <Input
           disableUnderline
           value={value}
@@ -64,16 +69,14 @@ export default function SearchBox({ loading, value, onChange, variant, onSubmit,
             variant="contained"
             color="primary"
             className={classes.searchButton}
-            onClick={onSubmit}
+            onClick={handleSubmit}
           >
-            {loading ? (
-              <CircularProgress size={18} color="#fff" fontSize="small" />
-            ) : (
-              <SearchIcon fontSize="small" />
-            )}
+            <SearchIcon fontSize="small" />
           </Button>
         )}
       </form>
     </div>
   );
 }
+
+export default forwardRef(SearchBox);

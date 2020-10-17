@@ -9,11 +9,6 @@ import SearchBox from '../../../components/SearchBox/SearchBox';
 import ListItemResult from '../../../components/ListItemResult/ListItemResult';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    height: '100%',
-    background: '#eeeeee',
-    padding: theme.spacing(3),
-  },
   search: {
     borderRadius: theme.spacing(3),
     padding: theme.spacing(0, 2),
@@ -38,11 +33,13 @@ export default function SearchDebounce() {
   };
 
   useEffect(() => {
-    fetchData(searchKey);
-  }, [debouncedSearchTerm, searchKey]);
+    if (debouncedSearchTerm) {
+      fetchData(searchKey);
+    }
+  }, [debouncedSearchTerm]);
 
   return (
-    <div className={classes.container}>
+    <>
       <SearchBox
         loading={loading}
         variant="debounce"
@@ -50,7 +47,7 @@ export default function SearchDebounce() {
         onChange={(value) => setSearchKey(value)}
         classNameSearch={classes.search}
       />
-      <ListItemResult loading={loading} data={datas} />
-    </div>
+      {searchKey && <ListItemResult loading={loading} data={datas} />}
+    </>
   );
 }
