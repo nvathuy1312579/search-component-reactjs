@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { forwardRef } from 'react';
+import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/styles';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   wrapperSearch: {
@@ -28,32 +30,53 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
     height: 40,
   },
+  loadingBtn: {
+    padding: theme.spacing(1),
+  },
 }));
 
-export default function SearchBox({ value, placeholder, onChange }) {
+function SearchBox({ loading, value, onChange, variant, onSubmit, classNameSearch }, ref) {
   const classes = useStyles();
-  const [searchKey, setSearchKey] = useState('');
+
+  const handleChange = (e) => {
+    onChange(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit && onSubmit();
+  };
 
   return (
-    <div className={classes.wrapperSearch}>
-      <form className={classes.search}>
+    <div className={classes.wrapperSearch} ref={ref}>
+      <form className={clsx(classes.search, classNameSearch)} onSubmit={handleSubmit}>
         <Input
           disableUnderline
-          value={searchKey}
+          value={value}
           name="searchKey"
           placeholder="Search..."
           className={classes.searchInput}
-          onChange={(e) => setSearchKey(e.target.value)}
+          onChange={handleChange}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.searchButton}
-          onClick={() => {}}
-        >
-          <SearchIcon fontSize="small" />
-        </Button>
+        {variant === 'debounce' ? (
+          loading ? (
+            <CircularProgress className={classes.loadingBtn} size={18} fontSize="small" />
+          ) : (
+            <SearchIcon fontSize="small" style={{ fill: '#ff5722' }} />
+          )
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.searchButton}
+            onClick={handleSubmit}
+          >
+            <SearchIcon fontSize="small" />
+          </Button>
+        )}
       </form>
     </div>
   );
 }
+
+export default forwardRef(SearchBox);

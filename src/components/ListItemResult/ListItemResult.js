@@ -6,20 +6,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    padding: theme.spacing(2, 0),
-    maxHeight: 250,
-    overflow: 'auto'
-  },
-  listItemContainer: {
-    '&:hover $moreIcon': {
-      visibility: 'visible',
-    },
+    maxHeight: 200,
+    overflow: 'auto',
   },
   listItem: {
     padding: theme.spacing(0, 2),
+    borderBottom: '1px solid #eee',
   },
   author: {
     fontWeight: 600,
@@ -27,54 +24,60 @@ const useStyles = makeStyles((theme) => ({
   itemContent: {
     overflow: 'hidden',
     alignItems: 'center',
-    paddingRight: theme.spacing(13),
-  },
-  itemName: {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    paddingRight: 4,
   },
 }));
 
-export default function ListItemResult({ data }) {
+function EmptyItem() {
+  const classes = useStyles();
+
+  return (
+    <ListItem>
+      <ListItemText>
+        <div className={classes.itemContent}>
+          <Typography noWrap className={classes.author}>
+            No results
+          </Typography>
+          <Typography>Your search returned no results</Typography>
+        </div>
+      </ListItemText>
+    </ListItem>
+  );
+}
+
+export default function ListItemResult({ loading, data }) {
   const classes = useStyles();
 
   return (
     <Paper>
-      <List disablePadding className={classes.wrapper}>
-        {data.length > 0 ? (
-          data.map((item) => (
-            <ListItem
-              key={item.id}
-              className={classes.listItem}
-              classes={{ container: classes.listItemContainer }}
-            >
-              <ListItemText>
-                <div className={classes.itemContent}>
-                  <Typography noWrap weight="bold" className={classes.author}>
-                    {item.author}
-                  </Typography>
-                  <Typography title={item.title} noWrap className={classes.itemName}>
-                    {item.title}
-                  </Typography>
-                </div>
-              </ListItemText>
-            </ListItem>
-          ))
-        ) : (
-          <ListItem>
-            <ListItemText>
-              <div className={classes.itemContent}>
-                <Typography noWrap className={classes.author}>
-                  No results
-                </Typography>
-                <Typography>Your search returned no results</Typography>
-              </div>
-            </ListItemText>
-          </ListItem>
-        )}
-      </List>
+      {loading ? (
+        <Box height={40} display="flex" justifyContent="center" alignItems="center">
+          <CircularProgress size={18} color="primary" />
+        </Box>
+      ) : (
+        <List disablePadding className={classes.wrapper}>
+          {data.length > 0 ? (
+            data.map((item) => (
+              <ListItem button key={item.id} className={classes.listItem}>
+                <ListItemText>
+                  <div className={classes.itemContent}>
+                    <Typography
+                      dangerouslySetInnerHTML={{ __html: `${item.author}` }}
+                      noWrap
+                      weight="bold"
+                      className={classes.author}
+                    />
+                    {item.title && (
+                      <Typography dangerouslySetInnerHTML={{ __html: `${item.title}` }} />
+                    )}
+                  </div>
+                </ListItemText>
+              </ListItem>
+            ))
+          ) : (
+            <EmptyItem />
+          )}
+        </List>
+      )}
     </Paper>
   );
 }
