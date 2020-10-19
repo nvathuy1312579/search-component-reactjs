@@ -14,6 +14,7 @@ export default function HomePage() {
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Frontend Skill Test - Thuy Nguyen
         </Typography>
+        
         <Typography variant="h5" gutterBottom>
          Default
         </Typography>
