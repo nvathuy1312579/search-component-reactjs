@@ -1,8 +1,6 @@
 import React, { Children } from 'react';
 import { isFragment } from 'react-is';
 
-let onlyTreeNodeWarned = false;
-
 export function toArray(children, option) {
   let ret = [];
 
