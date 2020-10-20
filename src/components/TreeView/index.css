@@ -1,0 +1,27 @@
+.rc-tree .child-tree {
+  margin: 0;
+  padding: 0 0 0 28px;
+}
+.child-tree {
+  display: none;
+}
+.child-tree-open {
+  display: block;
+}
+.switcher-noop {
+  width: 30px;
+  height: 30px;
+}
+.tree-node-content-wrapper {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+}
+.tree-node-content {
+  margin-left: 8px;
+  cursor: pointer;
+  width: calc(100% - 64px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
